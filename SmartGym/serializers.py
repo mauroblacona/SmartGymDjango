@@ -3,12 +3,6 @@ from rest_framework import serializers
 from .models import *
 
 
-class PersonaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Persona
-        fields = ('nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio')
-
-
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sucursal
@@ -18,13 +12,16 @@ class SucursalSerializer(serializers.ModelSerializer):
 class EmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empleado
-        fields = ('id', 'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'sucursal')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
+                  'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'sucursal')
 
 
 class SocioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Socio
-        fields = ('id', 'titulo', 'descripcion', 'anio')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
+                  'ficha_medica', 'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'actividad',
+                  'saldo', 'observaciones_medicas')
 
 
 class ActividadSerializer(serializers.ModelSerializer):
@@ -37,13 +34,15 @@ class ActividadSerializer(serializers.ModelSerializer):
 class ProfesionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesional
-        fields = ('id', 'fecha_inicio', 'profesion', 'matricula')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
+                  'fecha_inicio', 'profesion', 'matricula')
 
 
 class AutoridadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Autoridad
-        fields = ('id', 'fecha_nacimiento', 'telefono_emergencia')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
+                  'fecha_nacimiento', 'telefono_emergencia')
 
 
 class PosibleClienteSerializer(serializers.ModelSerializer):
@@ -61,7 +60,7 @@ class ConsultorioSerializer(serializers.ModelSerializer):
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
-        fields = ('id', 'fecha_inicio', 'cuit')
+        fields = ('id', 'fecha_inicio', 'cuit', 'nombre', 'telefono', 'correo', 'rubro', 'domicilio')
 
 
 class AsistenciaEmpleadoSerializer(serializers.ModelSerializer):

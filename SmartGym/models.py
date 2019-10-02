@@ -130,7 +130,12 @@ class Consultorio(models.Model):
         return self.nombre
 
 
-class Proveedor(Persona):
+class Proveedor(models.Model):
+    nombre = models.CharField('Nombre', max_length=120)
+    telefono = models.CharField('Telefono de Contacto', max_length=150)
+    correo = models.EmailField('Email')
+    domicilio = models.CharField('Domicilio', max_length=100)
+    rubro = models.CharField('Rubro', max_length=120)
     fecha_inicio = models.DateField('Fecha de Inicio')
     cuit = models.CharField('Cuit', null=True, blank=True, max_length=50)
 
