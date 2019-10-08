@@ -4,11 +4,11 @@ from django.db import models
 class Persona(models.Model):
     nombre = models.CharField('Nombres', max_length=120)
     apellido = models.CharField('Apellidos', max_length=120)
-    email = models.EmailField('Correo Electronico', max_length=200, null=True)
-    dni = models.IntegerField('Documento')
-    tel_fijo = models.CharField('Telefono Fijo', null=True, max_length=50)
-    celular = models.CharField('Celular', null=True, max_length=50)
-    domicilio = models.CharField('Domicilio', max_length=200)
+    email = models.EmailField('Correo Electronico', max_length=200, null=True, blank=True)
+    dni = models.IntegerField('Documento', null=True, blank=True)
+    tel_fijo = models.CharField('Telefono Fijo', null=True, max_length=50, blank=True)
+    celular = models.CharField('Celular', null=True, max_length=50, blank=True)
+    domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -28,10 +28,10 @@ class Sucursal(models.Model):
 
 class Empleado(Persona):
     foto = models.ImageField('Foto de Perfil', null=True, blank=True)
-    fecha_nacimiento = models.DateField('Fecha de Nacimiento')
+    fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
-    fecha_inicio = models.DateField('Fecha de Inicio')
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
+    fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Empleado'
@@ -59,11 +59,11 @@ class Actividad(models.Model):
 class Socio(Persona):
     ficha_medica = models.TextField('Ficha Medica', null=True, blank=True)
     foto = models.ImageField('Foto de Perfil', null=True, blank=True)
-    fecha_nacimiento = models.DateField('Fecha de Nacimiento')
+    fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
-    fecha_inicio = models.DateField('Fecha de Inicio')
-    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
-    saldo = models.BooleanField('Al dia / Debe', default=True)
+    fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
+    saldo = models.BooleanField('Al dia / Debe', default=True, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
 
     class Meta:
@@ -132,10 +132,10 @@ class Consultorio(models.Model):
 
 class Proveedor(models.Model):
     nombre = models.CharField('Nombre', max_length=120)
-    telefono = models.CharField('Telefono de Contacto', max_length=150)
-    correo = models.EmailField('Email')
+    telefono = models.CharField('Telefono de Contacto', max_length=150, null=True, blank=True)
+    correo = models.EmailField('Email', null=True, blank=True)
     domicilio = models.CharField('Domicilio', max_length=100)
-    rubro = models.CharField('Rubro', max_length=120)
+    rubro = models.CharField('Rubro', max_length=120, null=True, blank=True)
     fecha_inicio = models.DateField('Fecha de Inicio')
     cuit = models.CharField('Cuit', null=True, blank=True, max_length=50)
 
