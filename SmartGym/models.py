@@ -44,9 +44,9 @@ class Empleado(Persona):
 class Actividad(models.Model):
     nombre = models.CharField('Nombre', max_length=150)
     capacidad = models.IntegerField('Capacidad', blank=True, null=True)
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
-    horarios = models.TextField('Horarios')
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
+    horarios = models.TextField('Horarios', null=True, blank=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Actividad'
@@ -75,9 +75,9 @@ class Socio(Persona):
 
 
 class Profesional(Persona):
-    fecha_inicio = models.DateField('Fecha de Inicio')
-    profesion = models.CharField('Profesion', max_length=70)
-    matricula = models.CharField('Matricula', max_length=50)
+    fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
+    profesion = models.CharField('Profesion', max_length=70, blank=True)
+    matricula = models.CharField('Matricula', max_length=50, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Profesional'
@@ -88,7 +88,7 @@ class Profesional(Persona):
 
 
 class Autoridad(Persona):
-    fecha_nacimiento = models.DateField('Fecha de Nacimiento')
+    fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
 
     class Meta:
@@ -100,11 +100,11 @@ class Autoridad(Persona):
 
 
 class PosibleCliente(models.Model):
-    nombre = models.CharField('Nombre', max_length=120)
-    apellido = models.CharField('Apellido', max_length=150)
+    nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
+    apellido = models.CharField('Apellido', max_length=150, null=True)
     email = models.EmailField('Correo Electronico', blank=True, null=True)
-    fecha_consulta = models.DateField('Fecha de Consulta')
-    actividad = models.TextField('Actividad Consultada')
+    fecha_consulta = models.DateField('Fecha de Consulta', null=True, blank=True)
+    actividad = models.TextField('Actividad Consultada', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Posible Cliente'
@@ -115,12 +115,12 @@ class PosibleCliente(models.Model):
 
 
 class Consultorio(models.Model):
-    profesional = models.ForeignKey(Profesional, on_delete=models.CASCADE)
-    nombre = models.CharField('Nombre', max_length=120)
-    fecha = models.DateField('Fecha Inicio')
-    duracion_contrato = models.TextField('Duracion del Contrato')
-    horarios = models.TextField('Horarios')
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
+    profesional = models.ForeignKey(Profesional, on_delete=models.CASCADE, null=True, blank=True)
+    nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
+    fecha = models.DateField('Fecha Inicio', null=True, blank=True)
+    duracion_contrato = models.TextField('Duracion del Contrato', null=True, blank=True)
+    horarios = models.TextField('Horarios', null=True, blank=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Consultorio'
@@ -131,12 +131,12 @@ class Consultorio(models.Model):
 
 
 class Proveedor(models.Model):
-    nombre = models.CharField('Nombre', max_length=120)
+    nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
     telefono = models.CharField('Telefono de Contacto', max_length=150, null=True, blank=True)
     correo = models.EmailField('Email', null=True, blank=True)
-    domicilio = models.CharField('Domicilio', max_length=100)
+    domicilio = models.CharField('Domicilio', max_length=100, null=True, blank=True)
     rubro = models.CharField('Rubro', max_length=120, null=True, blank=True)
-    fecha_inicio = models.DateField('Fecha de Inicio')
+    fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
     cuit = models.CharField('Cuit', null=True, blank=True, max_length=50)
 
     class Meta:
@@ -148,9 +148,9 @@ class Proveedor(models.Model):
 
 
 class AsistenciaSocio(models.Model):
-    socio = models.ForeignKey(Socio, on_delete=models.CASCADE)
-    fecha_ingreso = models.DateTimeField('Fecha de Ingreso')
-    hora_ingreso = models.DateTimeField('Hora de Ingreso')
+    socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
+    hora_ingreso = models.DateTimeField('Hora de Ingreso', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Asistencia Socio'
@@ -158,9 +158,9 @@ class AsistenciaSocio(models.Model):
 
 
 class AsistenciaEmpleado(models.Model):
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
-    fecha_ingreso = models.DateTimeField('Fecha de Ingreso')
-    hora_ingreso = models.DateTimeField('Hora de Ingreso')
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
+    hora_ingreso = models.DateTimeField('Hora de Ingreso', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Asistencia Empleado'
@@ -168,11 +168,11 @@ class AsistenciaEmpleado(models.Model):
 
 
 class Insumo(models.Model):
-    nombre = models.CharField('Nombre', max_length=120)
+    nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
     estado = models.IntegerField(choices=[('E', 'Excelente'),
                                         ('B', 'Bueno'),
                                         ('M', 'Malo'),
-                                        ('R', 'En Reparacion')])
+                                        ('R', 'En Reparacion')], null=True, blank=True)
     observacion = models.TextField('Observaciones', null=True, blank=True)
 
     class Meta:
@@ -184,7 +184,7 @@ class Insumo(models.Model):
 
 
 class Ejercicio(models.Model):
-    nombre = models.CharField('Nombre', max_length=200)
+    nombre = models.CharField('Nombre', max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Ejercicio'
@@ -195,11 +195,11 @@ class Ejercicio(models.Model):
 
 
 class Rutina(models.Model):
-    socio = models.ForeignKey(Socio, on_delete=models.CASCADE)
-    nombre = models.CharField('Nombre', max_length=50)
-    ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE)
-    duracion = models.CharField('Duracion de la Rutina', max_length=50)
-    tipo = models.CharField('Tipo de Rutina', max_length=50)
+    socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
+    nombre = models.CharField('Nombre', max_length=50, null=True, blank=True)
+    ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE, null=True, blank=True)
+    duracion = models.CharField('Duracion de la Rutina', max_length=50, null=True, blank=True)
+    tipo = models.CharField('Tipo de Rutina', max_length=50, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Rutina'
@@ -210,10 +210,10 @@ class Rutina(models.Model):
 
 
 class Turno(models.Model):
-    socio = models.ForeignKey(Socio, on_delete=models.CASCADE)
-    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
-    fecha = models.DateTimeField('Fecha del Turno')
-    es_fijo = models.BooleanField(default=True)
+    socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
+    fecha = models.DateTimeField('Fecha del Turno', null=True, blank=True)
+    es_fijo = models.BooleanField(default=True, null=True, blank=True)
 
 
 class Caja(models.Model):
@@ -223,23 +223,23 @@ class Caja(models.Model):
 
 
 class Recordatorio(models.Model):
-    turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
-    socio = models.ForeignKey(Socio, on_delete=models.CASCADE)
+    turno = models.ForeignKey(Turno, on_delete=models.CASCADE, null=True, blank=True)
+    socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
-    fecha = models.DateTimeField('Fecha del Recordatorio')
+    fecha = models.DateTimeField('Fecha del Recordatorio', null=True, blank=True)
 
 
 class Cuota(models.Model):
-    socio = models.ForeignKey(Socio, on_delete=models.CASCADE)
-    fecha = models.DateTimeField('Fecha del Recordatorio')
+    socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
+    fecha = models.DateTimeField('Fecha del Recordatorio', null=True, blank=True)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
-    monto = models.IntegerField('Monto')
-    metodo = models.CharField('Metodo de Pago', max_length=50)
+    monto = models.IntegerField('Monto', null=True, blank=True)
+    metodo = models.CharField('Metodo de Pago', max_length=50, null=True, blank=True)
 
 
 class Liquidacion(models.Model):
-    fecha = models.DateTimeField('Fecha del Recordatorio')
+    fecha = models.DateTimeField('Fecha del Recordatorio', null=True, blank=True)
 
 
 class PagoAProveedores(models.Model):
-    fecha = models.DateTimeField('Fecha del Recordatorio')
+    fecha = models.DateTimeField('Fecha del Recordatorio', null=True, blank=True)
