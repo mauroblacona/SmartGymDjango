@@ -40,6 +40,7 @@ router.register(r'recordatorios', views.RecordatorioViewSet)
 router.register(r'cuotas', views.CuotaViewSet)
 router.register(r'liquidaciones', views.LiquidacionViewSet)
 router.register(r'pagoaproveedores', views.PagoAProveedoresViewSet)
+router.register(r'horarios', views.HorarioViewSet)
 
 
 urlpatterns = [

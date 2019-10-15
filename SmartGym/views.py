@@ -110,34 +110,9 @@ class PagoAProveedoresViewSet(viewsets.ModelViewSet):
     serializer_class = PagoAProveedoresSerializer
 
 
-    # def list(self, request, *args, **kwargs):
-    #      if request.method == 'GET':
-    #          socios = Socio.objects.all()
-    #          serializer = SocioSerializer(socios, many=True)
-    #          return JsonResponse(serializer.data, safe=False)
-
-
-    #     elif request.method == 'POST':
-    #         data = JSONParser().parse(request)
-    #         serializer = SocioSerializer(data=data)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return JsonResponse(serializer.data, status=201)
-    #         return JsonResponse(serializer.errors, status=400)
-    #
-    #     elif request.method == 'PUT':
-    #         data = JSONParser().parse(request)
-    #         serializer = SocioSerializer(data=data)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return JsonResponse(serializer.data)
-    #         return JsonResponse(serializer.errors, status=400)
-    #
-    #     elif request.method == 'DELETE':
-    #         socios = Socio.objects.all()
-    #         import ipdb; ipdb.set_trace()
-    #         socios.delete()
-    #         return JsonResponse(status=204)
+class HorarioViewSet(viewsets.ModelViewSet):
+    queryset = Horario.objects.all()
+    serializer_class = HorarioSerializer
 
 
 class HttpResponseUnauthorized(HttpResponse):

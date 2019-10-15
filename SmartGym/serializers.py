@@ -27,8 +27,8 @@ class SocioSerializer(serializers.ModelSerializer):
 class ActividadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividad
-        fields = ('id', 'ficha_medica', 'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'actividad',
-                  'saldo', 'observaciones_medicas')
+        fields = ('id', 'nombre', 'capacidad', 'empleado', 'precio', 'horarios',
+                  'sucursal')
 
 
 class ProfesionalSerializer(serializers.ModelSerializer):
@@ -127,3 +127,9 @@ class PagoAProveedoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = PagoAProveedores
         fields = ('id', 'fecha')
+
+
+class HorarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Horario
+        fields = ('id', 'hora_inicio', 'hora_fin', 'dia', 'actividad')

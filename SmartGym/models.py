@@ -47,6 +47,7 @@ class Actividad(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
     horarios = models.TextField('Horarios', null=True, blank=True)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
+    precio = models.IntegerField('Precio', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Actividad'
@@ -54,6 +55,20 @@ class Actividad(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Horario(models.Model):
+    hora_inicio = models.DateTimeField('Hora de Inicio', null=True, blank=True)
+    hora_fin = models.DateTimeField('Hora de Fin', null=True, blank=True)
+    dia = models.DateField('Dia de la Actividad', null=True, blank=True)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Horario'
+        verbose_name_plural = 'Horarios'
+
+    def __str__(self):
+        return self.actividad
 
 
 class Socio(Persona):
