@@ -41,10 +41,16 @@ CORS_ORIGIN_WHITELIST = (
 APPEND_SLASH = False
 
 
+JWT_AUTH = {
+    # Authorization:Token xxx
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+}
+
+
 # Rest Framework
 REST_FRAMEWORK = {
 'DEFAULT_PERMISSION_CLASSES': (
-    #'rest_framework.permissions.IsAuthenticated',
+    'rest_framework.permissions.IsAuthenticated',
     'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -75,6 +81,7 @@ INSTALLED_APPS = [
     'SmartGym',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

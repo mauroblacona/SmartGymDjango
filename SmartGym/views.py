@@ -8,6 +8,15 @@ from rest_framework import permissions, exceptions
 from rest_framework import  generics
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [AllowAny]
 
 
 class EmpleadoViewSet(viewsets.ModelViewSet):
