@@ -86,7 +86,7 @@ class Socio(Persona):
         verbose_name_plural = 'Socios'
 
     def __str__(self):
-        return '{0} - {0}'.format(self.nombre, self.apellido)
+        return '{0} - {1}'.format(self.nombre, self.apellido)
 
 
 class Profesional(Persona):
