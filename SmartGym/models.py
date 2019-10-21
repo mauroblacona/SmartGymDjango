@@ -6,6 +6,7 @@ class Persona(models.Model):
     apellido = models.CharField('Apellidos', max_length=120)
     email = models.EmailField('Correo Electronico', max_length=200, null=True, blank=True)
     dni = models.IntegerField('Documento', null=True, blank=True)
+    genero = models.CharField('Genero', null=True, max_length=50, blank=True)
     tel_fijo = models.CharField('Telefono Fijo', null=True, max_length=50, blank=True)
     celular = models.CharField('Celular', null=True, max_length=50, blank=True)
     domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
@@ -32,6 +33,8 @@ class Empleado(Persona):
     telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
+    especialidad = models.CharField('Especialidad', max_length=200, null=True, blank=True)
+    observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Empleado'
