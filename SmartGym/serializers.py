@@ -78,13 +78,13 @@ class ProveedorSerializer(serializers.ModelSerializer):
 class AsistenciaEmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AsistenciaEmpleado
-        fields = ('id', 'empleado', 'fecha_inicio', 'hora_ingeso')
+        fields = ('id', 'empleado', 'fecha_ingreso', 'hora_ingreso')
 
 
 class AsistenciaSocioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AsistenciaSocio
-        fields = ('id', 'socio', 'fecha_inicio', 'hora_ingreso')
+        fields = ('id', 'socio', 'fecha_ingreso', 'hora_ingreso')
 
 
 class InsumoSerializer(serializers.ModelSerializer):
