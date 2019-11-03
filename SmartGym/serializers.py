@@ -23,24 +23,24 @@ class SucursalSerializer(serializers.ModelSerializer):
 class EmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empleado
-        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'tel_fijo', 'celular', 'domicilio',
-                  'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'sucursal', 'especialidad',
-                  'observaciones_medicas')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal',
+                  'especialidad', 'observaciones_medicas', 'actividades')
 
 
 class SocioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Socio
-        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'tel_fijo', 'celular', 'domicilio',
-                  'ficha_medica', 'foto', 'fecha_nacimiento', 'telefono_emergencia', 'fecha_inicio', 'actividad',
-                  'saldo', 'observaciones_medicas')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono',  'telefono_emergencia',
+                  'domicilio', 'ficha_medica', 'foto', 'fecha_nacimiento', 'actividad', 'saldo',
+                  'observaciones_medicas')
 
 
 class ActividadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividad
-        fields = ('id', 'nombre', 'capacidad', 'empleado', 'precio', 'horarios',
-                  'sucursal')
+        fields = ('id', 'nombre', 'capacidad', 'empleados', 'horarios', 'sucursal',
+                  'precio')
 
 
 class ProfesionalSerializer(serializers.ModelSerializer):

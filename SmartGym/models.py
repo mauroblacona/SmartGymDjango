@@ -7,15 +7,12 @@ class Persona(models.Model):
     email = models.EmailField('Correo Electronico', max_length=200, null=True, blank=True)
     dni = models.IntegerField('Documento', null=True, blank=True)
     genero = models.CharField('Genero', null=True, max_length=50, blank=True)
-    tel_fijo = models.CharField('Telefono Fijo', null=True, max_length=50, blank=True)
-    celular = models.CharField('Celular', null=True, max_length=50, blank=True)
+    telefono = models.CharField('Telefono', null=True, max_length=50, blank=True)
+    telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, max_length=50, blank=True)
     domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
 
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return "{} - {} - {} - {} - {} - {} - {}".format(self.nombre, self.apellido, self.dni, self.tel_fijo, self.email, self.celular, self.domicilio)
 
 
 class Sucursal(models.Model):
@@ -24,17 +21,18 @@ class Sucursal(models.Model):
     telefono = models.CharField('Telefono', null=True, max_length=50)
 
     def __str__(self):
-        return "{} - {} - {}".format(self.nombre, self.direccion, self.telefono)
+        return self.nombre
 
 
 class Empleado(Persona):
-    foto = models.ImageField('Foto de Perfil', null=True, blank=True)
+    #foto = models.ImageField('Foto de Perfil', null=True, blank=True)
+    #ficha_medica = models.ImageField('Ficha Medica', null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
-    telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
     especialidad = models.CharField('Especialidad', max_length=200, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
+    actividades = models.ManyToManyField('Actividad', blank=True)
 
     class Meta:
         verbose_name = 'Empleado'
@@ -47,7 +45,7 @@ class Empleado(Persona):
 class Actividad(models.Model):
     nombre = models.CharField('Nombre', max_length=150)
     capacidad = models.IntegerField('Capacidad', blank=True, null=True)
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
+    empleados = models.ManyToManyField('Empleado', blank=True)
     horarios = models.TextField('Horarios', null=True, blank=True)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
     precio = models.IntegerField('Precio', null=True, blank=True)
@@ -78,7 +76,6 @@ class Socio(Persona):
     ficha_medica = models.TextField('Ficha Medica', null=True, blank=True)
     foto = models.ImageField('Foto de Perfil', null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
-    telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
     saldo = models.BooleanField('Al dia / Debe', default=True, null=True, blank=True)
@@ -102,19 +99,18 @@ class Profesional(Persona):
         verbose_name_plural = 'Profesionales'
 
     def __str__(self):
-        return '{0},{1}'.format(self.nombre, self.apellido)
+        return '{0} - {1}'.format(self.nombre, self.apellido)
 
 
 class Autoridad(Persona):
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
-    telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, blank=True, max_length=50)
 
     class Meta:
         verbose_name = 'Autoridad'
         verbose_name_plural = 'Autoridades'
 
     def __str__(self):
-        return '{0},{1}'.format(self.nombre, self.apellido)
+        return '{0} - {1}'.format(self.nombre, self.apellido)
 
 
 class PosibleCliente(models.Model):
@@ -129,7 +125,7 @@ class PosibleCliente(models.Model):
         verbose_name_plural = 'Posibles Clientes'
 
         def __str__(self):
-            return '{} - {}'.format(self.nombre, self.apellido)
+            return '{0} - {1}'.format(self.nombre, self.apellido)
 
 
 class Consultorio(models.Model):
@@ -198,7 +194,7 @@ class Insumo(models.Model):
         verbose_name_plural = 'Insumos'
 
     def __str__(self):
-        return'{} - {}'.format(self.nombre, self.estado)
+        return'{0} - {1}'.format(self.nombre, self.estado)
 
 
 class Ejercicio(models.Model):
@@ -224,7 +220,7 @@ class Rutina(models.Model):
         verbose_name_plural = 'Rutinas'
 
     def __str__(self):
-        return'{} - {}'.format(self.nombre, self.socio)
+        return '{0} - {1}'.format(self.nombre, self.socio)
 
 
 class Turno(models.Model):
