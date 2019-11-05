@@ -20,107 +20,107 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class EmpleadoViewSet(viewsets.ModelViewSet):
-    queryset = Empleado.objects.all()
+    queryset = Empleado.objects.all().order_by('id')
     serializer_class = EmpleadoSerializer
 
 
 class SucursalViewSet(viewsets.ModelViewSet):
-    queryset = Sucursal.objects.all()
+    queryset = Sucursal.objects.all().order_by('id')
     serializer_class = SucursalSerializer
 
 
 class SocioViewSet(viewsets.ModelViewSet):
-    queryset = Socio.objects.all()
+    queryset = Socio.objects.all().order_by('id')
     serializer_class = SocioSerializer
 
 
 class ActividadViewSet(viewsets.ModelViewSet):
-    queryset = Actividad.objects.all()
+    queryset = Actividad.objects.all().order_by('id')
     serializer_class = ActividadSerializer
 
 
 class ProfesionalViewSet(viewsets.ModelViewSet):
-    queryset = Profesional.objects.all()
+    queryset = Profesional.objects.all().order_by('id')
     serializer_class = ProfesionalSerializer
 
 
 class AutoridadViewSet(viewsets.ModelViewSet):
-    queryset = Autoridad.objects.all()
+    queryset = Autoridad.objects.all().order_by('id')
     serializer_class = AutoridadSerializer
 
 
 class PosibleClienteViewSet(viewsets.ModelViewSet):
-    queryset = PosibleCliente.objects.all()
+    queryset = PosibleCliente.objects.all().order_by('id')
     serializer_class = PosibleClienteSerializer
 
 
 class ConsultorioViewSet(viewsets.ModelViewSet):
-    queryset = Consultorio.objects.all()
+    queryset = Consultorio.objects.all().order_by('id')
     serializer_class = ConsultorioSerializer
 
 
 class ProveedorViewSet(viewsets.ModelViewSet):
-    queryset = Proveedor.objects.all()
+    queryset = Proveedor.objects.all().order_by('id')
     serializer_class = ProveedorSerializer
 
 
 class AsistenciaSocioViewSet(viewsets.ModelViewSet):
-    queryset = AsistenciaSocio.objects.all()
+    queryset = AsistenciaSocio.objects.all().order_by('id')
     serializer_class = AsistenciaSocioSerializer
 
 
 class AsistenciaEmpleadoViewSet(viewsets.ModelViewSet):
-    queryset = AsistenciaEmpleado.objects.all()
+    queryset = AsistenciaEmpleado.objects.all().order_by('id')
     serializer_class = AsistenciaEmpleadoSerializer
 
 
 class InsumoViewSet(viewsets.ModelViewSet):
-    queryset = Insumo.objects.all()
+    queryset = Insumo.objects.all().order_by('id')
     serializer_class = InsumoSerializer
 
 
 class EjercicioViewSet(viewsets.ModelViewSet):
-    queryset = Ejercicio.objects.all()
+    queryset = Ejercicio.objects.all().order_by('id')
     serializer_class = EjercicioSerializer
 
 
 class RutinaViewSet(viewsets.ModelViewSet):
-    queryset = Rutina.objects.all()
+    queryset = Rutina.objects.all().order_by('id')
     serializer_class = RutinaSerializer
 
 
 class TurnoViewSet(viewsets.ModelViewSet):
-    queryset = Turno.objects.all()
+    queryset = Turno.objects.all().order_by('id')
     serializer_class = TurnoSerializer
 
 
 class CajaViewSet(viewsets.ModelViewSet):
-    queryset = Caja.objects.all()
+    queryset = Caja.objects.all().order_by('id')
     serializer_class = CajaSerializer
 
 
 class RecordatorioViewSet(viewsets.ModelViewSet):
-    queryset = Recordatorio.objects.all()
+    queryset = Recordatorio.objects.all().order_by('id')
     serializer_class = RecordatorioSerializer
 
 
 class CuotaViewSet(viewsets.ModelViewSet):
-    queryset = Cuota.objects.all()
+    queryset = Cuota.objects.all().order_by('id')
     serializer_class = CuotaSerializer
 
 
 class LiquidacionViewSet(viewsets.ModelViewSet):
-    queryset = Liquidacion.objects.all()
+    queryset = Liquidacion.objects.all().order_by('id')
     serializer_class = LiquidacionSerializer
 
 
 class PagoAProveedoresViewSet(viewsets.ModelViewSet):
-    queryset = PagoAProveedores.objects.all()
+    queryset = PagoAProveedores.objects.all().order_by('id')
     serializer_class = PagoAProveedoresSerializer
 
 
 class HorarioViewSet(viewsets.ModelViewSet):
-    queryset = Horario.objects.all()
+    queryset = Horario.objects.all().order_by('id')
     serializer_class = HorarioSerializer
 
 
