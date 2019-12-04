@@ -24,37 +24,37 @@ class EmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empleado
         fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
-                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto', 'ficha_medica', 'sucursal',
                   'especialidad', 'observaciones_medicas', 'actividades')
 
 
 class SocioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Socio
-        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono',  'telefono_emergencia',
-                  'domicilio', 'ficha_medica', 'foto', 'fecha_nacimiento', 'actividad', 'saldo',
-                  'observaciones_medicas')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'foto', 'ficha_medica', 'actividades'
+                  , 'saldo', 'observaciones_medicas')
 
 
 class ActividadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividad
-        fields = ('id', 'nombre', 'capacidad', 'empleados', 'horarios', 'sucursal',
-                  'precio')
+        fields = ('id', 'nombre', 'capacidad', 'empleados', 'sucursal', 'precio')
 
 
 class ProfesionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesional
-        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
-                  'fecha_inicio', 'profesion', 'matricula')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto', 'profesion',
+                  'matricula', 'fecha_desde', 'fecha_hasta', 'consultorios')
 
 
 class AutoridadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Autoridad
-        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'tel_fijo', 'celular', 'domicilio',
-                  'fecha_nacimiento', 'telefono_emergencia')
+        fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto')
 
 
 class PosibleClienteSerializer(serializers.ModelSerializer):
@@ -66,82 +66,88 @@ class PosibleClienteSerializer(serializers.ModelSerializer):
 class ConsultorioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consultorio
-        fields = ('id', 'profesional', 'nombre', 'fecha', 'duracion_contrato', 'horarios', 'sucursal')
+        fields = ('id', 'nombre', 'fecha_apertura', 'horarios', 'sucursal')
 
 
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
-        fields = ('id', 'fecha_inicio', 'cuit', 'nombre', 'telefono', 'correo', 'rubro', 'domicilio')
+        fields = ('id', 'fecha_inicio', 'cuit', 'nombre', 'telefono', 'correo', 'rubro', 'domicilio', 'saldo')
 
 
 class AsistenciaEmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AsistenciaEmpleado
-        fields = ('id', 'empleado', 'fecha_ingreso', 'hora_ingreso')
+        fields = ('id', 'empleado', 'fecha_ingreso', 'hora_ingreso', 'tipo')
 
 
 class AsistenciaSocioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AsistenciaSocio
-        fields = ('id', 'socio', 'fecha_ingreso', 'hora_ingreso')
+        fields = ('id', 'socio', 'fecha_ingreso', 'hora_ingreso', 'sucursal')
 
 
 class InsumoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Insumo
-        fields = ('id', 'nombre', 'estado', 'observaciones')
+        fields = ('id', 'nombre', 'estado', 'observacion', 'codigo_insumo', 'proveedor')
 
 
 class RutinaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rutina
-        fields = ('id', 'socio', 'nombre', 'ejercicio', 'duracion', 'tipo')
+        fields = ('id', 'socio', 'nombre', 'ejercicio', 'duracion', 'cantidad_dias', 'descripcion')
 
 
 class EjercicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ejercicio
-        fields = ('id', 'nombre')
+        fields = ('id', 'nombre', 'musculo')
 
 
 class TurnoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turno
-        fields = ('id', 'socio', 'actividad', 'fecha', 'es_fijo')
+        fields = ('id', 'socio', 'actividad', 'horario', 'es_fijo')
 
 
 class CajaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turno
-        fields = ('id', 'tipo', 'descripcion')
+        fields = ('id', 'tipo', 'motivo', 'metodo_pago')
 
 
 class RecordatorioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recordatorio
-        fields = ('id', 'titulo', 'socio', 'descripcion', 'fecha')
+        fields = ('id', 'turno', 'socio', 'descripcion', 'fecha')
 
 
 class CuotaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuota
-        fields = ('id', 'socio', 'fecha', 'descripcion', 'monto', 'metodo')
+        fields = ('id', 'socio', 'fecha_vencimiento', 'descripcion', 'monto')
 
 
 class LiquidacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Liquidacion
-        fields = ('id', 'fecha')
-
-
-class PagoAProveedoresSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PagoAProveedores
-        fields = ('id', 'fecha')
+        fields = ('id', 'empleado', 'cantidad_horas', 'precio_hora', 'monto_total', 'fecha')
 
 
 class HorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horario
-        fields = ('id', 'hora_inicio', 'hora_fin', 'dia', 'actividad')
+        fields = ('id', 'hora_inicio', 'hora_fin', 'dia', 'actividad', 'empleado')
+
+
+class ProfesionalXConsultoriosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Horario
+        fields = ('id', 'profesional', 'consultorio', 'dia', 'hora_inicio', 'hora_fin')
+
+
+class RutinaXEjercicioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Horario
+        fields = ('id', 'rutina', 'ejercicio', 'peso', 'repeticiones', 'series')

@@ -19,7 +19,6 @@ from rest_framework import routers
 from rest_framework.authtoken.views import ObtainAuthToken
 from SmartGym import views
 
-
 router = routers.DefaultRouter()
 router.register(r'empleados', views.EmpleadoViewSet)
 router.register(r'socios', views.SocioViewSet)
@@ -40,7 +39,6 @@ router.register(r'cajas', views.CajaViewSet)
 router.register(r'recordatorios', views.RecordatorioViewSet)
 router.register(r'cuotas', views.CuotaViewSet)
 router.register(r'liquidaciones', views.LiquidacionViewSet)
-router.register(r'pagoaproveedores', views.PagoAProveedoresViewSet)
 router.register(r'horarios', views.HorarioViewSet)
 router.register(r'usuarios', views.UserViewSet)
 
@@ -48,5 +46,10 @@ router.register(r'usuarios', views.UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('auth/', ObtainAuthToken.as_view())
+    path('auth/', ObtainAuthToken.as_view()),
+    path('principal/', views.principal, name='principal')
 ]
+
+admin.site.site_header = 'SmartGym'
+admin.site.index_title = 'SmartGym'
+admin.site.site_title = 'Panel Administrativo'
