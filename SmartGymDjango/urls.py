@@ -44,6 +44,7 @@ router.register(r'usuarios', views.UserViewSet)
 
 
 urlpatterns = [
+    path('jet/', include('jet.urls', 'jet')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('auth/', ObtainAuthToken.as_view()),
