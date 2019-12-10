@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib import admin
-
-
+from model_utils import Choices
+from django.utils.html import mark_safe
 
 
 class Persona(models.Model):
@@ -9,13 +9,14 @@ class Persona(models.Model):
     apellido = models.CharField('Apellidos', max_length=120, null=True, blank=True)
     email = models.EmailField('Correo Electronico', max_length=200, null=True, blank=True)
     dni = models.IntegerField('Documento', null=True, blank=True)
-    genero = models.CharField('Genero', null=True, max_length=50, blank=True)
+    GENEROS = Choices('Indefinido', 'Masculino', 'Femenino')
+    genero = models.CharField('Genero', null=True, max_length=50, blank=True, choices=GENEROS)
     telefono = models.CharField('Telefono', null=True, max_length=50, blank=True)
     telefono_emergencia = models.CharField('Telefono de Emergencia', null=True, max_length=50, blank=True)
     domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
-    foto = models.ImageField('Foto de Perfil', null=True, blank=True)
+    foto = models.ImageField('Foto de Perfil', null=True, blank=True, upload_to="imagenes/")
 
     class Meta:
         abstract = True
@@ -26,8 +27,19 @@ class Sucursal(models.Model):
     direccion = models.CharField('Direccion', null=True, max_length=50)
     telefono = models.CharField('Telefono', null=True, max_length=50)
 
+    class Meta:
+        verbose_name = 'Sucursal'
+        verbose_name_plural = 'Sucursales'
+
     def __str__(self):
         return self.nombre
+
+
+class SucursalAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'direccion')
+    list_display = ('nombre', 'direccion', 'telefono')
+    #list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Empleado(Persona):
@@ -42,7 +54,14 @@ class Empleado(Persona):
         verbose_name_plural = 'Empleados'
 
     def __str__(self):
-        return '{} - {}'.format(self.nombre, self.apellido)
+        return '{0} - {1}'.format(self.nombre, self.apellido)
+
+
+class EmpleadoAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'dni', 'apellido')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'especialidad')
+    list_filter = ('genero', 'especialidad', 'actividades', 'fecha_inicio')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Actividad(models.Model):
@@ -60,6 +79,13 @@ class Actividad(models.Model):
         return self.nombre
 
 
+class ActividadAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'sucursal')
+    list_display = ('nombre', 'capacidad', 'precio', 'sucursal')
+    list_filter = ('capacidad', 'precio', 'sucursal')
+    #readonly_fields = ["foto_perfil"]
+
+
 class Horario(models.Model):
     hora_inicio = models.DateTimeField('Hora de Inicio', null=True, blank=True)
     hora_fin = models.DateTimeField('Hora de Fin', null=True, blank=True)
@@ -72,30 +98,40 @@ class Horario(models.Model):
         verbose_name_plural = 'Horarios'
 
     def __str__(self):
-        return self.actividad
+        return '{} - {}'.format(self.actividad, self.empleado)
+
+
+class HorarioAdmin(admin.ModelAdmin):
+    search_fields = ('actividad', 'dia')
+    list_display = ('hora_inicio', 'hora_fin', 'dia', 'actividad', 'empleado')
+    list_filter = ('dia', 'actividad', 'empleado')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Socio(Persona):
-    ficha_medica = models.TextField('Ficha Medica', null=True, blank=True)
+    ficha_medica = models.ImageField('Ficha Medica', null=True, blank=True, upload_to="imagenes/")
     actividades = models.ManyToManyField('Actividad', blank=True)
     saldo = models.BooleanField('Al dia / Debe', default=True, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
-
-
 
     class Meta:
         verbose_name = 'Socio'
         verbose_name_plural = 'Socios'
 
-
     def __str__(self):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
+    def foto_perfil(self):
+        return mark_safe('<img src="imagenes/%s" width="150" height="150" />' % self.foto)
+
+    foto_perfil.short_description = 'Foto de Perfil'
+
 
 class SocioAdmin(admin.ModelAdmin):
-    search_fields = ('nombre', 'dni')
-    list_display = ('nombre', 'apellido', 'dni', 'email', 'telefono_emergencia')
-    list_filter = ('genero', 'saldo')
+    search_fields = ('nombre', 'dni', 'apellido')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo')
+    list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio')
+    readonly_fields = ["foto_perfil"]
 
 
 class Profesional(Persona):
@@ -113,6 +149,13 @@ class Profesional(Persona):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
 
+class ProfesionalAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'dni', 'apellido', 'profesion')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'profesion', 'matricula')
+    list_filter = ('genero', 'profesion')
+    #readonly_fields = ["foto_perfil"]
+
+
 class Autoridad(Persona):
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -122,6 +165,13 @@ class Autoridad(Persona):
 
     def __str__(self):
         return '{0} - {1}'.format(self.nombre, self.apellido)
+
+
+class AutoridadAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'dni', 'apellido', 'sucursal')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'sucursal')
+    list_filter = ('genero', 'sucursal')
+    #readonly_fields = ["foto_perfil"]
 
 
 class PosibleCliente(models.Model):
@@ -135,8 +185,15 @@ class PosibleCliente(models.Model):
         verbose_name = 'Posible Cliente'
         verbose_name_plural = 'Posibles Clientes'
 
-        def __str__(self):
-            return '{0} - {1}'.format(self.nombre, self.apellido)
+    def __str__(self):
+        return '{0} - {1}'.format(self.nombre, self.apellido)
+
+
+class PosibleClienteAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'apellido')
+    list_display = ('nombre', 'apellido', 'fecha_consulta', 'email', 'actividad')
+    list_filter = ('actividad', 'fecha_consulta')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Consultorio(models.Model):
@@ -151,6 +208,13 @@ class Consultorio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class ConsultorioAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'sucursal')
+    list_display = ('nombre', 'fecha_apertura', 'horarios', 'sucursal')
+    list_filter = ('sucursal', 'fecha_apertura')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Proveedor(models.Model):
@@ -173,6 +237,13 @@ class Proveedor(models.Model):
         return self.nombre
 
 
+class ProveedorAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'rubro')
+    list_display = ('nombre', 'telefono', 'rubro', 'correo', 'cuit')
+    list_filter = ('fecha_inicio', 'rubro', 'saldo')
+    #readonly_fields = ["foto_perfil"]
+
+
 class AsistenciaSocio(models.Model):
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
     fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
@@ -183,25 +254,29 @@ class AsistenciaSocio(models.Model):
         verbose_name = 'Asistencia Socio'
         verbose_name_plural = 'Asistencias Socios'
 
+    def __str__(self):
+        return self.socio
+
 
 class AsistenciaEmpleado(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
     fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
     hora_ingreso = models.DateTimeField('Hora de Ingreso', null=True, blank=True)
-    tipo = models.BooleanField(choices=[('E', 'Entrada'),
-                                        ('S', 'Salida')], null=True, blank=True)
+    TIPO_INGRESOS = Choices('Entrada', 'Salida')
+    tipo = models.BooleanField(choices=TIPO_INGRESOS, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Asistencia Empleado'
         verbose_name_plural = 'Asistencias Empleados'
 
+    def __str__(self):
+        return self.empleado
+
 
 class Insumo(models.Model):
     nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
-    estado = models.IntegerField(choices=[
-                                        ('B', 'Bueno'),
-                                        ('M', 'Malo'),
-                                        ('R', 'En Reparacion')], null=True, blank=True)
+    ESTADOS = Choices('Bueno', 'Malo', 'A reparar')
+    estado = models.CharField(choices=ESTADOS, null=True, blank=True, max_length=100)
     observacion = models.TextField('Observaciones', null=True, blank=True)
     codigo_insumo = models.CharField('Codigo del Insumo', null=True, blank=True, max_length=100)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, null=True, blank=True)
@@ -211,7 +286,14 @@ class Insumo(models.Model):
         verbose_name_plural = 'Insumos'
 
     def __str__(self):
-        return'{0} - {1}'.format(self.nombre, self.estado)
+        return'{0} - {1}'.format(self.nombre, self.codigo_insumo)
+
+
+class InsumoAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'codigo_insumo')
+    list_display = ('nombre', 'estado', 'codigo_insumo', 'proveedor')
+    list_filter = ('estado', 'proveedor')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Ejercicio(models.Model):
@@ -224,6 +306,13 @@ class Ejercicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class EjercicioAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'musculo')
+    list_display = ('nombre', 'musculo')
+    list_filter = ('musculo', 'nombre')
+    #readonly_fields = ["foto_perfil"]
 
 
 class Rutina(models.Model):
@@ -242,19 +331,54 @@ class Rutina(models.Model):
         return '{0} - {1}'.format(self.nombre, self.socio)
 
 
+class RutinaAdmin(admin.ModelAdmin):
+    search_fields = ('nombre', 'socio')
+    list_display = ('nombre', 'socio', 'duracion', 'cantidad_dias')
+    #list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio')
+    #readonly_fields = ["foto_perfil"]
+
+
 class Turno(models.Model):
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
     horario = models.ForeignKey(Horario, on_delete=models.CASCADE, null=True, blank=True)
     es_fijo = models.BooleanField(default=True, null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Turno'
+        verbose_name_plural = 'Turnos'
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.socio, self.es_fijo)
+
+
+class TurnoAdmin(admin.ModelAdmin):
+    search_fields = ('socio', 'actividad')
+    list_display = ('socio', 'actividad', 'horario', 'es_fijo')
+    list_filter = ('es_fijo', 'actividad')
+    # readonly_fields = ["foto_perfil"]
+
 
 class Caja(models.Model):
-    tipo = models.IntegerField(choices=[('I', 'Ingreso'),
-                                        ('E', 'Egreso')])
-    motivo = models.CharField(choices=[('Pago', 'Pago a Proveedores'),
-                                        ('Cobro', 'Cobro Cuota')], blank=True, null=True, max_length=50)
+    TIPOS = Choices('Ingreso', 'Egreso')
+    tipo = models.IntegerField(choices=TIPOS)
+    MOTIVOS = Choices('Pago a Proveedores', 'Cobro Cuota', 'Otro')
+    motivo = models.CharField(choices=MOTIVOS, blank=True, null=True, max_length=50)
     metodo_pago = models.CharField('Metodo de Pago', max_length=50, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Caja'
+        verbose_name_plural = 'Cajas'
+
+    def __str__(self):
+        return self.tipo
+
+
+class CajaAdmin(admin.ModelAdmin):
+    search_fields = ('tipo', 'motivo', 'metodo_pago')
+    list_display = ('tipo', 'motivo', 'metodo_pago')
+    list_filter = ('tipo', 'metodo_pago')
+    # readonly_fields = ["foto_perfil"]
 
 
 class Recordatorio(models.Model):
@@ -263,12 +387,40 @@ class Recordatorio(models.Model):
     descripcion = models.TextField('Descripcion', null=True, blank=True)
     fecha = models.DateTimeField('Fecha del Recordatorio', null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Recordatorio'
+        verbose_name_plural = 'Recordatorios'
+
+    def __str__(self):
+        return self.socio
+
+
+class RecordatorioAdmin(admin.ModelAdmin):
+    search_fields = ('socio', 'fecha')
+    list_display = ('turno', 'socio', 'fecha', 'descripcion')
+    list_filter = ('fecha', 'socio')
+    # readonly_fields = ["foto_perfil"]
+
 
 class Cuota(models.Model):
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
     fecha_vencimiento = models.DateTimeField('Fecha del Vencimiento', null=True, blank=True)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
     monto = models.IntegerField('Monto', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Cuota'
+        verbose_name_plural = 'Cuotas'
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.socio, self.monto)
+
+
+class CuotaAdmin(admin.ModelAdmin):
+    search_fields = ('socio', 'monto')
+    list_display = ('socio', 'monto', 'fecha_vencimiento', 'descripcion')
+    list_filter = ('fecha_vencimiento', 'monto')
+    # readonly_fields = ["foto_perfil"]
 
 
 class Liquidacion(models.Model):
@@ -277,6 +429,20 @@ class Liquidacion(models.Model):
     precio_hora = models.IntegerField('Precio Hora Liquidada', null=True, blank=True)
     monto_total = models.DecimalField('Total Liquidado', null=True, blank=True, max_digits=10, decimal_places=10)
     fecha = models.DateField('Fecha de la liquidacion', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Liquidacion'
+        verbose_name_plural = 'Liquidaciones'
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.empleado, self.fecha)
+
+
+class LiquidacionAdmin(admin.ModelAdmin):
+    search_fields = ('empleado', 'monto_total')
+    list_display = ('empleado', 'cantidad_horas', 'monto_total', 'fecha')
+    list_filter = ('fecha', 'monto_total')
+    # readonly_fields = ["foto_perfil"]
 
 
 class ProfesionalXConsultorios(models.Model):

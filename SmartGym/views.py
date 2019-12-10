@@ -6,9 +6,7 @@ from django.template import loader
 from .models import *
 from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-
-
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -167,7 +165,7 @@ class RutinaXEjercicio(viewsets.ModelViewSet):
 
 class ProfesionalXConsultorios(viewsets.ModelViewSet):
     queryset = ProfesionalXConsultorios.objects.all().order_by('id')
-    serializer_class = ProfesionalXConsultoriosSerializer
+    serializer_class = ProfesionalXConsultorioSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 

@@ -113,7 +113,7 @@ class TurnoSerializer(serializers.ModelSerializer):
 
 class CajaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Turno
+        model = Caja
         fields = ('id', 'tipo', 'motivo', 'metodo_pago')
 
 
@@ -141,13 +141,13 @@ class HorarioSerializer(serializers.ModelSerializer):
         fields = ('id', 'hora_inicio', 'hora_fin', 'dia', 'actividad', 'empleado')
 
 
-class ProfesionalXConsultoriosSerializer(serializers.ModelSerializer):
+class ProfesionalXConsultorioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Horario
+        model = ProfesionalXConsultorios
         fields = ('id', 'profesional', 'consultorio', 'dia', 'hora_inicio', 'hora_fin')
 
 
 class RutinaXEjercicioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Horario
+        model = RutinaXEjercicio
         fields = ('id', 'rutina', 'ejercicio', 'peso', 'repeticiones', 'series')

@@ -45,8 +45,9 @@ router.register(r'usuarios', views.UserViewSet)
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
-    path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    path('', admin.site.urls),
+    #path('', include(router.urls)),
     path('auth/', ObtainAuthToken.as_view()),
     path('principal/', views.principal, name='principal')
 ]
@@ -54,3 +55,4 @@ urlpatterns = [
 admin.site.site_header = 'SmartGym'
 admin.site.index_title = 'SmartGym'
 admin.site.site_title = 'Panel Administrativo'
+admin.site.site_url = "/principal/"
