@@ -110,8 +110,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'SmartGymDjango.urls'
 
-MEDIA_URL = '/imagenes/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'imagenes')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATES = [
     {

@@ -126,7 +126,7 @@ class Socio(Persona):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
     def foto_perfil(self):
-        return mark_safe('<img src="imagenes/%s" width="150" height="150" />' % self.foto)
+        return mark_safe('<img src="media/%s" width="200" height="200"/>' % self.foto)
 
     foto_perfil.short_description = 'Foto de Perfil'
 
