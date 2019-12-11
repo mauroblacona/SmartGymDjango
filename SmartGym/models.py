@@ -49,6 +49,7 @@ class Empleado(Persona):
     especialidad = models.CharField('Especialidad', max_length=200, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
     actividades = models.ManyToManyField('Actividad', blank=True)
+    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Empleado'
@@ -60,8 +61,8 @@ class Empleado(Persona):
 
 class EmpleadoAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido')
-    list_display = ('nombre', 'apellido', 'dni', 'email', 'especialidad')
-    list_filter = ('genero', 'especialidad', 'actividades', 'fecha_inicio')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'especialidad', 'status')
+    list_filter = ('genero', 'especialidad', 'actividades', 'fecha_inicio', 'status')
     #readonly_fields = ["foto_perfil"]
 
 
@@ -90,18 +91,17 @@ class ActividadAdmin(admin.ModelAdmin):
 class Horario(models.Model):
     hora_inicio = models.DateTimeField('Hora de Inicio', null=True, blank=True)
     hora_fin = models.DateTimeField('Hora de Fin', null=True, blank=True)
-    dia = models.DateField('Dia de la Actividad', null=True, blank=True)
+    DIAS = Choices('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')
+    dia = models.CharField('Dia de la Actividad', null=True, blank=True, choices=DIAS, max_length=150)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Horario'
-        verbose_name_plural = 'Horarios'
+        verbose_name_plural = 'Horarios de las Actividades'
 
     def __str__(self):
         return '{} - {}'.format(self.actividad, self.empleado)
-
-
 
 
 class HorarioAdmin(admin.ModelAdmin):
@@ -116,6 +116,7 @@ class Socio(Persona):
     actividades = models.ManyToManyField('Actividad', blank=True)
     saldo = models.BooleanField('Al dia / Debe', default=True, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
+    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Socio'
@@ -132,8 +133,8 @@ class Socio(Persona):
 
 class SocioAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido')
-    list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo')
-    list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo', 'status')
+    list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio', 'status')
     readonly_fields = ["foto_perfil"]
 
 
@@ -143,6 +144,7 @@ class Profesional(Persona):
     fecha_desde = models.DateField('Fecha Desde', blank=True, null=True)
     fecha_hasta = models.DateField('Fecha Hasta', blank=True, null=True)
     consultorios = models.ManyToManyField('Consultorio', blank=True, through='ProfesionalXConsultorios')
+    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Profesional'
@@ -154,8 +156,8 @@ class Profesional(Persona):
 
 class ProfesionalAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido', 'profesion')
-    list_display = ('nombre', 'apellido', 'dni', 'email', 'profesion', 'matricula')
-    list_filter = ('genero', 'profesion')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'profesion', 'matricula', 'status')
+    list_filter = ('genero', 'profesion', 'status')
     #readonly_fields = ["foto_perfil"]
 
 
@@ -186,7 +188,7 @@ class PosibleCliente(models.Model):
 
     class Meta:
         verbose_name = 'Posible Cliente'
-        verbose_name_plural = 'Posibles Clientes'
+        verbose_name_plural = 'Registro de Posibles Clientes'
 
     def __str__(self):
         return '{0} - {1}'.format(self.nombre, self.apellido)
@@ -258,8 +260,6 @@ class AsistenciaSocio(models.Model):
         verbose_name_plural = 'Asistencias Socios'
 
 
-
-
 class AsistenciaEmpleado(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
     fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
@@ -277,7 +277,7 @@ class AsistenciaEmpleado(models.Model):
 
 class Insumo(models.Model):
     nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
-    ESTADOS = Choices('Bueno', 'Malo', 'A reparar')
+    ESTADOS = Choices('Disponible', 'No disponible', 'En Reparacion')
     estado = models.CharField(choices=ESTADOS, null=True, blank=True, max_length=100)
     observacion = models.TextField('Observaciones', null=True, blank=True)
     codigo_insumo = models.CharField('Codigo del Insumo', null=True, blank=True, max_length=100)
@@ -371,7 +371,7 @@ class Caja(models.Model):
 
     class Meta:
         verbose_name = 'Caja'
-        verbose_name_plural = 'Cajas'
+        verbose_name_plural = 'Registro de Cajas'
 
     def __str__(self):
         return self.tipo
@@ -410,10 +410,11 @@ class Cuota(models.Model):
     fecha_vencimiento = models.DateTimeField('Fecha del Vencimiento', null=True, blank=True)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
     monto = models.IntegerField('Monto', null=True, blank=True)
+    #codigo transaccion
 
     class Meta:
         verbose_name = 'Cuota'
-        verbose_name_plural = 'Cuotas'
+        verbose_name_plural = 'Control de Cuotas'
 
     def __str__(self):
         return '{0} - {1}'.format(self.socio, self.monto)
@@ -435,7 +436,7 @@ class Liquidacion(models.Model):
 
     class Meta:
         verbose_name = 'Liquidacion'
-        verbose_name_plural = 'Liquidaciones'
+        verbose_name_plural = 'Liquidaciones de Empleados'
 
     def __str__(self):
         return '{0} - {1}'.format(self.empleado, self.fecha)
@@ -466,7 +467,7 @@ class HorarioConsultorio(models.Model):
 
 class HorarioConsultorioAdmin(admin.ModelAdmin):
     search_fields = ('dia', 'profesionales__nombre', 'consultorios__nombre')
-    list_display = ('hora_inicio', 'hora_fin', 'dia')
+    list_display = ('dia', 'hora_inicio', 'hora_fin')
     list_filter = ('dia', 'hora_inicio')
     # readonly_fields = ["foto_perfil"]
 

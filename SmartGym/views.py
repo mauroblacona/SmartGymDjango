@@ -6,7 +6,7 @@ from django.template import loader
 from .models import *
 from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class UserViewSet(viewsets.ModelViewSet):
