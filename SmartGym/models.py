@@ -16,7 +16,7 @@ class Persona(models.Model):
     domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
-    foto = models.ImageField('Foto de Perfil', null=True, blank=True, upload_to="imagenes/")
+    foto = models.ImageField('Foto de Perfil', null=True, blank=True, upload_to="imagenes")
 
     class Meta:
         abstract = True
@@ -49,7 +49,9 @@ class Empleado(Persona):
     especialidad = models.CharField('Especialidad', max_length=200, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
     actividades = models.ManyToManyField('Actividad', blank=True)
-    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
+    ACTIVO, INACTIVO = ('AC', 'IN')
+    STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
+    status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
 
     class Meta:
         verbose_name = 'Empleado'
@@ -64,6 +66,11 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'dni', 'email', 'especialidad', 'status')
     list_filter = ('genero', 'especialidad', 'actividades', 'fecha_inicio', 'status')
     #readonly_fields = ["foto_perfil"]
+
+    def marcar_inactivo(self, request, queryset):
+        count = queryset.update(status=Empleado.INACTIVO)
+        self.message_user(request, '{} empleados inactivos.'.format(count))
+    marcar_inactivo.short_description = "Marcar los seleccionados como Inactivos"
 
 
 class Actividad(models.Model):
@@ -112,11 +119,13 @@ class HorarioAdmin(admin.ModelAdmin):
 
 
 class Socio(Persona):
-    ficha_medica = models.ImageField('Ficha Medica', null=True, blank=True, upload_to="imagenes/")
+    ficha_medica = models.ImageField('Ficha Medica', null=True, blank=True, upload_to="imagenes")
     actividades = models.ManyToManyField('Actividad', blank=True)
     saldo = models.BooleanField('Al dia / Debe', default=True, null=True, blank=True)
     observaciones_medicas = models.TextField('Observaciones Medicas', blank=True, null=True)
-    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
+    ACTIVO, INACTIVO= ('AC', 'IN')
+    STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
+    status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
 
     class Meta:
         verbose_name = 'Socio'
@@ -126,7 +135,7 @@ class Socio(Persona):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
     def foto_perfil(self):
-        return mark_safe('<img src="media/%s" width="200" height="200"/>' % self.foto)
+        return mark_safe('<img src="/media/%s" width="200" height="200"/>' % self.foto)
 
     foto_perfil.short_description = 'Foto de Perfil'
 
@@ -136,6 +145,12 @@ class SocioAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo', 'status')
     list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio', 'status')
     readonly_fields = ["foto_perfil"]
+    actions = ['marcar_inactivo',]
+
+    def marcar_inactivo(self, request, queryset):
+        count = queryset.update(status=Socio.INACTIVO)
+        self.message_user(request, '{} socios inactivos.'.format(count))
+    marcar_inactivo.short_description = "Marcar los seleccionados como Inactivos"
 
 
 class Profesional(Persona):
@@ -144,7 +159,9 @@ class Profesional(Persona):
     fecha_desde = models.DateField('Fecha Desde', blank=True, null=True)
     fecha_hasta = models.DateField('Fecha Hasta', blank=True, null=True)
     consultorios = models.ManyToManyField('Consultorio', blank=True, through='ProfesionalXConsultorios')
-    status = models.BooleanField('Activo / Inactivo', default=True, null=True, blank=True)
+    ACTIVO, INACTIVO = ('AC', 'IN')
+    STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
+    status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
 
     class Meta:
         verbose_name = 'Profesional'
@@ -158,7 +175,13 @@ class ProfesionalAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido', 'profesion')
     list_display = ('nombre', 'apellido', 'dni', 'email', 'profesion', 'matricula', 'status')
     list_filter = ('genero', 'profesion', 'status')
+    actions = ['marcar_inactivo', ]
     #readonly_fields = ["foto_perfil"]
+
+    def marcar_inactivo(self, request, queryset):
+        count = queryset.update(status=Profesional.INACTIVO)
+        self.message_user(request, '{} profesionales inactivos.'.format(count))
+    marcar_inactivo.short_description = "Marcar los seleccionados como Inactivos"
 
 
 class Autoridad(Persona):
@@ -277,8 +300,9 @@ class AsistenciaEmpleado(models.Model):
 
 class Insumo(models.Model):
     nombre = models.CharField('Nombre', max_length=120, null=True, blank=True)
-    ESTADOS = Choices('Disponible', 'No disponible', 'En Reparacion')
-    estado = models.CharField(choices=ESTADOS, null=True, blank=True, max_length=100)
+    DISPONIBLE, NO_DISPONIBLE, A_REPARAR = ('DIS', 'NO', 'REP')
+    STATUSES = ((DISPONIBLE, 'Disponible'), (NO_DISPONIBLE, 'No Disponible'), (A_REPARAR, 'A Reparar'))
+    estado = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
     observacion = models.TextField('Observaciones', null=True, blank=True)
     codigo_insumo = models.CharField('Codigo del Insumo', null=True, blank=True, max_length=100)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, null=True, blank=True)
@@ -295,7 +319,13 @@ class InsumoAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'codigo_insumo')
     list_display = ('nombre', 'estado', 'codigo_insumo', 'proveedor', 'observacion')
     list_filter = ('estado', 'proveedor')
+    actions = ['marcar_nodisponible', ]
     #readonly_fields = ["foto_perfil"]
+
+    def marcar_nodisponible(self, request, queryset):
+        count = queryset.update(estado=Insumo.NO_DISPONIBLE)
+        self.message_user(request, '{} insumos no disponibles.'.format(count))
+    marcar_nodisponible.short_description = "Marcar los seleccionados como No Disponibles"
 
 
 class Ejercicio(models.Model):
