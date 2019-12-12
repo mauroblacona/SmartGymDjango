@@ -126,7 +126,7 @@ class Socio(Persona):
     ACTIVO, INACTIVO= ('AC', 'IN')
     STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
     status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, name='Sucursal de Alta', null=True, blank=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Socio'
@@ -384,27 +384,6 @@ class TurnoAdmin(admin.ModelAdmin):
     list_filter = ('es_fijo', 'actividad')
 
 
-class Caja(models.Model):
-    TIPOS = Choices('Ingreso', 'Egreso')
-    tipo = models.CharField(choices=TIPOS, max_length=150)
-    MOTIVOS = Choices('Pago a Proveedores', 'Cobro Cuota', 'Otro')
-    motivo = models.CharField(choices=MOTIVOS, blank=True, null=True, max_length=50)
-    metodo_pago = models.CharField('Metodo de Pago', max_length=50, null=True, blank=True)
-
-    class Meta:
-        verbose_name = 'Caja'
-        verbose_name_plural = 'Registro de Cajas'
-
-    def __str__(self):
-        return self.tipo
-
-
-class CajaAdmin(admin.ModelAdmin):
-    search_fields = ('tipo', 'motivo', 'metodo_pago')
-    list_display = ('tipo', 'motivo', 'metodo_pago')
-    list_filter = ('tipo', 'metodo_pago')
-
-
 class Recordatorio(models.Model):
     turno = models.ForeignKey(Turno, on_delete=models.CASCADE, null=True, blank=True)
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
@@ -431,7 +410,9 @@ class Cuota(models.Model):
     fecha_vencimiento = models.DateTimeField('Fecha del Vencimiento', null=True, blank=True)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
     monto = models.IntegerField('Monto', null=True, blank=True)
-    #codigo transaccion
+    METODOS = Choices('Efectivo', 'Debito', 'Credito', 'Otro')
+    metodo_pago = models.CharField('Metodo de Pago', max_length=50, null=True, blank=True, choices=METODOS)
+    codigo_transaccion = models.CharField('Codigo de la transaccion', max_length=300, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Cuota'
@@ -442,9 +423,30 @@ class Cuota(models.Model):
 
 
 class CuotaAdmin(admin.ModelAdmin):
-    search_fields = ('socio__nombre', 'monto')
-    list_display = ('socio', 'monto', 'fecha_vencimiento', 'descripcion')
-    list_filter = ('fecha_vencimiento', 'socio__nombre')
+    search_fields = ('socio__nombre', 'codigo_transaccion')
+    list_display = ('socio', 'monto', 'fecha_vencimiento', 'metodo_pago', 'codigo_transaccion')
+    list_filter = ('fecha_vencimiento', 'socio__nombre', 'metodo_pago')
+
+
+class Caja(models.Model):
+    TIPOS = Choices('Ingreso', 'Egreso')
+    tipo = models.CharField(choices=TIPOS, max_length=150)
+    MOTIVOS = Choices('Pago a Proveedores', 'Cobro Cuota', 'Otro')
+    motivo = models.CharField(choices=MOTIVOS, blank=True, null=True, max_length=50)
+    cuota = models.ForeignKey(Cuota, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Caja'
+        verbose_name_plural = 'Registro de Cajas'
+
+    def __str__(self):
+        return self.tipo
+
+
+class CajaAdmin(admin.ModelAdmin):
+    search_fields = ('tipo', 'motivo')
+    list_display = ('tipo', 'motivo')
+    list_filter = ('tipo', 'motivo')
 
 
 class Liquidacion(models.Model):
