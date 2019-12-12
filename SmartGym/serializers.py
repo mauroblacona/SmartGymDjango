@@ -17,14 +17,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sucursal
-        fields = ('id', 'nombre', 'direccion', 'telefono')
+        fields = ('id', 'nombre', 'direccion', 'telefono', 'encargado')
 
 
 class EmpleadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empleado
         fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
-                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto', 'ficha_medica', 'sucursal',
+                  'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto', 'ficha_medica', 'status',
                   'especialidad', 'observaciones_medicas', 'actividades')
 
 
@@ -33,7 +33,7 @@ class SocioSerializer(serializers.ModelSerializer):
         model = Socio
         fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
                   'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'foto', 'ficha_medica', 'actividades'
-                  , 'saldo', 'observaciones_medicas')
+                  , 'saldo', 'observaciones_medicas', 'status', 'sucursal')
 
 
 class ActividadSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class ProfesionalSerializer(serializers.ModelSerializer):
         model = Profesional
         fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
                   'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'sucursal', 'foto', 'profesion',
-                  'matricula', 'fecha_desde', 'fecha_hasta', 'consultorios')
+                  'matricula', 'fecha_desde', 'fecha_hasta', 'consultorios', 'status')
 
 
 class AutoridadSerializer(serializers.ModelSerializer):
@@ -72,7 +72,7 @@ class ConsultorioSerializer(serializers.ModelSerializer):
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
-        fields = ('id', 'fecha_inicio', 'cuit', 'nombre', 'telefono', 'correo', 'rubro', 'domicilio', 'saldo')
+        fields = ('id', 'fecha_inicio', 'cuit', 'nombre', 'telefono', 'correo', 'rubro', 'domicilio', 'saldo', 'monto')
 
 
 class AsistenciaEmpleadoSerializer(serializers.ModelSerializer):
@@ -102,7 +102,7 @@ class RutinaSerializer(serializers.ModelSerializer):
 class EjercicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ejercicio
-        fields = ('id', 'nombre', 'musculo')
+        fields = ('id', 'nombre', 'grupo_muscular')
 
 
 class TurnoSerializer(serializers.ModelSerializer):

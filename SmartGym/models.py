@@ -126,6 +126,7 @@ class Socio(Persona):
     ACTIVO, INACTIVO= ('AC', 'IN')
     STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
     status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, name='Sucursal de Alta', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Socio'
@@ -135,7 +136,7 @@ class Socio(Persona):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
     def foto_perfil(self):
-        return mark_safe('<img src="/media/%s" width="200" height="200"/>' % self.foto)
+        return mark_safe('<img src="/Users/mauroblacona/Desktop/SmartGymDjango/media/%s" width="200" height="200"/>' % self.foto)
 
     foto_perfil.short_description = 'Foto de Perfil'
 
@@ -145,7 +146,7 @@ class SocioAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo', 'status')
     list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio', 'status')
     readonly_fields = ["foto_perfil"]
-    actions = ['marcar_inactivo',]
+    actions = ['marcar_inactivo', ]
 
     def marcar_inactivo(self, request, queryset):
         count = queryset.update(status=Socio.INACTIVO)
@@ -176,7 +177,6 @@ class ProfesionalAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'dni', 'email', 'profesion', 'matricula', 'status')
     list_filter = ('genero', 'profesion', 'status')
     actions = ['marcar_inactivo', ]
-    #readonly_fields = ["foto_perfil"]
 
     def marcar_inactivo(self, request, queryset):
         count = queryset.update(status=Profesional.INACTIVO)
@@ -199,7 +199,6 @@ class AutoridadAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido', 'sucursal__nombre')
     list_display = ('nombre', 'apellido', 'dni', 'email', 'sucursal')
     list_filter = ('genero', 'sucursal')
-    #readonly_fields = ["foto_perfil"]
 
 
 class PosibleCliente(models.Model):
@@ -221,7 +220,6 @@ class PosibleClienteAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'apellido')
     list_display = ('nombre', 'apellido', 'fecha_consulta', 'email', 'actividad')
     list_filter = ('actividad', 'fecha_consulta')
-    #readonly_fields = ["foto_perfil"]
 
 
 class Consultorio(models.Model):
@@ -242,7 +240,6 @@ class ConsultorioAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'sucursal__nombre')
     list_display = ('nombre', 'fecha_apertura', 'sucursal')
     list_filter = ('sucursal', 'fecha_apertura')
-    #readonly_fields = ["foto_perfil"]
 
 
 class Proveedor(models.Model):
@@ -269,13 +266,12 @@ class ProveedorAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'rubro')
     list_display = ('nombre', 'telefono', 'rubro', 'correo', 'cuit', 'monto', 'saldo')
     list_filter = ('fecha_inicio', 'rubro', 'saldo')
-    #readonly_fields = ["foto_perfil"]
 
 
 class AsistenciaSocio(models.Model):
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
-    hora_ingreso = models.DateTimeField('Hora de Ingreso', null=True, blank=True)
+    fecha_ingreso = models.CharField('Fecha de Ingreso', null=True, blank=True, max_length=150)
+    hora_ingreso = models.CharField('Hora de Ingreso', null=True, blank=True, max_length=150)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -285,8 +281,8 @@ class AsistenciaSocio(models.Model):
 
 class AsistenciaEmpleado(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_ingreso = models.DateTimeField('Fecha de Ingreso', null=True, blank=True)
-    hora_ingreso = models.DateTimeField('Hora de Ingreso', null=True, blank=True)
+    fecha_ingreso = models.CharField('Fecha de Ingreso', null=True, blank=True, max_length=150)
+    hora_ingreso = models.CharField('Hora de Ingreso', null=True, blank=True, max_length=150)
     TIPO_INGRESOS = Choices('Entrada', 'Salida')
     tipo = models.BooleanField(choices=TIPO_INGRESOS, null=True, blank=True)
 
@@ -320,7 +316,6 @@ class InsumoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'estado', 'codigo_insumo', 'proveedor', 'observacion')
     list_filter = ('estado', 'proveedor')
     actions = ['marcar_nodisponible', ]
-    #readonly_fields = ["foto_perfil"]
 
     def marcar_nodisponible(self, request, queryset):
         count = queryset.update(estado=Insumo.NO_DISPONIBLE)
@@ -345,7 +340,6 @@ class EjercicioAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'grupo_muscular')
     list_display = ('nombre', 'grupo_muscular')
     list_filter = ('grupo_muscular', 'nombre')
-    #readonly_fields = ["foto_perfil"]
 
 
 class Rutina(models.Model):
@@ -368,7 +362,6 @@ class RutinaAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'socio__nombre')
     list_display = ('nombre', 'socio', 'duracion', 'cantidad_dias')
     #list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio')
-    #readonly_fields = ["foto_perfil"]
 
 
 class Turno(models.Model):
@@ -389,7 +382,6 @@ class TurnoAdmin(admin.ModelAdmin):
     search_fields = ('socio__nombre', 'actividad__nombre')
     list_display = ('socio', 'actividad', 'horario', 'es_fijo')
     list_filter = ('es_fijo', 'actividad')
-    # readonly_fields = ["foto_perfil"]
 
 
 class Caja(models.Model):
@@ -411,7 +403,6 @@ class CajaAdmin(admin.ModelAdmin):
     search_fields = ('tipo', 'motivo', 'metodo_pago')
     list_display = ('tipo', 'motivo', 'metodo_pago')
     list_filter = ('tipo', 'metodo_pago')
-    # readonly_fields = ["foto_perfil"]
 
 
 class Recordatorio(models.Model):
@@ -454,7 +445,6 @@ class CuotaAdmin(admin.ModelAdmin):
     search_fields = ('socio__nombre', 'monto')
     list_display = ('socio', 'monto', 'fecha_vencimiento', 'descripcion')
     list_filter = ('fecha_vencimiento', 'socio__nombre')
-    # readonly_fields = ["foto_perfil"]
 
 
 class Liquidacion(models.Model):
@@ -476,7 +466,6 @@ class LiquidacionAdmin(admin.ModelAdmin):
     search_fields = ('empleado__nombre', 'monto_total')
     list_display = ('empleado', 'cantidad_horas', 'monto_total', 'fecha')
     list_filter = ('fecha', 'monto_total')
-    # readonly_fields = ["foto_perfil"]
 
 
 class HorarioConsultorio(models.Model):
@@ -499,7 +488,6 @@ class HorarioConsultorioAdmin(admin.ModelAdmin):
     search_fields = ('dia', 'profesionales__nombre', 'consultorios__nombre')
     list_display = ('dia', 'hora_inicio', 'hora_fin')
     list_filter = ('dia', 'hora_inicio')
-    # readonly_fields = ["foto_perfil"]
 
 
 class ProfesionalXConsultorios(models.Model):
