@@ -16,7 +16,7 @@ class Persona(models.Model):
     domicilio = models.CharField('Domicilio', max_length=200, null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', null=True, blank=True)
     fecha_inicio = models.DateField('Fecha de Inicio', null=True, blank=True)
-    foto = models.ImageField('Foto de Perfil', null=True, blank=True, upload_to="imagenes")
+    foto = models.ImageField('Foto de Perfil', null=True, blank=True, upload_to='imagenes/')
 
     class Meta:
         abstract = True
@@ -85,7 +85,7 @@ class Actividad(models.Model):
         verbose_name_plural = 'Actividades'
 
     def __str__(self):
-        return self.nombre
+        return '{0} - {1}'.format(self.nombre, self.sucursal)
 
 
 class ActividadAdmin(admin.ModelAdmin):
@@ -136,7 +136,7 @@ class Socio(Persona):
         return '{0} - {1}'.format(self.nombre, self.apellido)
 
     def foto_perfil(self):
-        return mark_safe('<img src="/Users/mauroblacona/Desktop/SmartGymDjango/media/%s" width="200" height="200"/>' % self.foto)
+        return mark_safe('<img src="/media/%s" width="200" height="200"/>' % self.foto)
 
     foto_perfil.short_description = 'Foto de Perfil'
 

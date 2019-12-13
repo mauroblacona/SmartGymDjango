@@ -19,6 +19,9 @@ from rest_framework import routers
 from rest_framework.authtoken.views import ObtainAuthToken
 from SmartGym import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = routers.DefaultRouter()
 router.register(r'empleados', views.EmpleadoViewSet)
 router.register(r'socios', views.SocioViewSet)
@@ -56,3 +59,8 @@ admin.site.site_header = 'SmartGym'
 admin.site.index_title = 'SmartGym'
 admin.site.site_title = 'Panel Administrativo'
 admin.site.site_url = "http://localhost:4200/principal/"
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

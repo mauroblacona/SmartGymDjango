@@ -83,7 +83,7 @@ class AsistenciaSocioViewSet(viewsets.ModelViewSet):
     queryset = AsistenciaSocio.objects.all().order_by('id')
     serializer_class = AsistenciaSocioSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
 
 class AsistenciaEmpleadoViewSet(viewsets.ModelViewSet):
