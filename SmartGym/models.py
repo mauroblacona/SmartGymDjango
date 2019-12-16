@@ -127,7 +127,7 @@ class Socio(Persona):
     STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
     status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
-    cuenta = models.DecimalField('Cuenta', blank=True, null=True, max_digits=8, decimal_places=2)
+    cuenta = models.IntegerField('Cuenta', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Socio'
