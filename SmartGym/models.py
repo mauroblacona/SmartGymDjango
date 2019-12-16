@@ -127,6 +127,7 @@ class Socio(Persona):
     STATUSES = ((ACTIVO, 'Activo'), (INACTIVO, 'Inactivo'),)
     status = models.CharField(choices=STATUSES, null=True, blank=True, max_length=150)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
+    cuenta = models.DecimalField('Cuenta', blank=True, null=True, max_digits=8, decimal_places=2)
 
     class Meta:
         verbose_name = 'Socio'
@@ -143,7 +144,7 @@ class Socio(Persona):
 
 class SocioAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'dni', 'apellido')
-    list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo', 'status')
+    list_display = ('nombre', 'apellido', 'dni', 'email', 'saldo', 'status', 'cuenta')
     list_filter = ('genero', 'saldo', 'actividades', 'fecha_inicio', 'status')
     readonly_fields = ["foto_perfil"]
     actions = ['marcar_inactivo', ]
@@ -407,7 +408,7 @@ class RecordatorioAdmin(admin.ModelAdmin):
 
 class Cuota(models.Model):
     socio = models.ForeignKey(Socio, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_vencimiento = models.DateTimeField('Fecha del Vencimiento', null=True, blank=True)
+    fecha_vencimiento = models.CharField('Fecha del Vencimiento', null=True, blank=True, max_length=200)
     descripcion = models.TextField('Descripcion', null=True, blank=True)
     monto = models.IntegerField('Monto', null=True, blank=True)
     METODOS = Choices('Efectivo', 'Debito', 'Credito', 'Otro')

@@ -33,7 +33,7 @@ class SocioSerializer(serializers.ModelSerializer):
         model = Socio
         fields = ('id', 'nombre', 'apellido', 'email', 'dni', 'genero', 'telefono', 'telefono_emergencia',
                   'domicilio', 'fecha_nacimiento', 'fecha_inicio', 'foto', 'ficha_medica', 'actividades'
-                  , 'saldo', 'observaciones_medicas', 'status', 'sucursal')
+                  , 'saldo', 'observaciones_medicas', 'status', 'sucursal', 'cuenta')
 
 
 class ActividadSerializer(serializers.ModelSerializer):
@@ -126,7 +126,7 @@ class RecordatorioSerializer(serializers.ModelSerializer):
 class CuotaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuota
-        fields = ('id', 'socio', 'fecha_vencimiento', 'descripcion', 'monto')
+        fields = ('id', 'socio', 'fecha_vencimiento', 'descripcion', 'monto', 'metodo_pago', 'codigo_transaccion')
 
 
 class LiquidacionSerializer(serializers.ModelSerializer):
