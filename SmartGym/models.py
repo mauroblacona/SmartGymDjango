@@ -96,8 +96,8 @@ class ActividadAdmin(admin.ModelAdmin):
 
 
 class Horario(models.Model):
-    hora_inicio = models.DateTimeField('Hora de Inicio', null=True, blank=True)
-    hora_fin = models.DateTimeField('Hora de Fin', null=True, blank=True)
+    hora_inicio = models.CharField('Hora de Inicio', null=True, blank=True, max_length=150)
+    hora_fin = models.CharField('Hora de Fin', null=True, blank=True, max_length=150)
     DIAS = Choices('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')
     dia = models.CharField('Dia de la Actividad', null=True, blank=True, choices=DIAS, max_length=150)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE, null=True, blank=True)
@@ -472,8 +472,8 @@ class LiquidacionAdmin(admin.ModelAdmin):
 
 
 class HorarioConsultorio(models.Model):
-    hora_inicio = models.DateTimeField('Hora de Inicio', null=True, blank=True)
-    hora_fin = models.DateTimeField('Hora de Fin', null=True, blank=True)
+    hora_inicio = models.CharField('Hora de Inicio', null=True, blank=True, max_length=150)
+    hora_fin = models.CharField('Hora de Fin', null=True, blank=True, max_length=150)
     DIAS = Choices('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')
     dia = models.CharField('Dia de Atención', null=True, blank=True, choices=DIAS, max_length=150)
     profesionales = models.ForeignKey(Profesional, on_delete=models.CASCADE, null=True, blank=True)
