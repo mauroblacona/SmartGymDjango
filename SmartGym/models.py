@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from model_utils import Choices
 from django.utils.html import mark_safe
+from auditlog.registry import auditlog
 
 
 class Persona(models.Model):
@@ -507,3 +508,6 @@ class RutinaXEjercicio(models.Model):
     peso = models.DecimalField('Peso', null=True, blank=True, max_digits=1000, decimal_places=5)
     repeticiones = models.IntegerField('Repeticiones', null=True, blank=True)
     series = models.IntegerField('Series', null=True, blank=True)
+
+
+auditlog.register(Actividad)

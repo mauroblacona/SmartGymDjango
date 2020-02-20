@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
+from django.db.models import Count, Q
 from rest_framework import viewsets
 from .serializers import *
 from django.shortcuts import render
-from django.template import loader
 from .models import *
 from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
@@ -177,5 +177,10 @@ class HttpResponseUnauthorized(HttpResponse):
         return HttpResponseUnauthorized()
 
 
-def principal(request):
-    return render(request, 'principal.html', {"actividades": Actividad.objects.all()})
+def estadisticas(request):
+    dataset = Caja.objects \
+        .values('tipo') \
+        .annotate(survived_count=Count('tipo', filter=Q(tipo='Ingreso')),
+                  not_survived_count=Count('tipo', filter=Q(tipo='Egreso'))) \
+        .order_by('tipo ')
+    return render(request, 'estadisticas.html', {'dataset': dataset})

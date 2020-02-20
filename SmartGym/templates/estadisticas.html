@@ -1,0 +1,30 @@
+<div id="container"></div>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+  Highcharts.chart('container', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Ingresos y Egresos'
+      },
+      xAxis: {
+          categories: [
+            {% for entry in dataset %}'{{ entry.tipo }} Class'{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+      },
+      series: [{
+          name: 'Ingresos',
+          data: [
+            {% for entry in dataset %}{{ entry.survived_count }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          color: 'green'
+      }, {
+          name: 'Egresos',
+          data: [
+            {% for entry in dataset %}{{ entry.not_survived_count }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          color: 'red'
+      }]
+  });
+</script>

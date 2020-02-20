@@ -52,7 +52,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('auth/', ObtainAuthToken.as_view()),
-    #path('principal/', views.principal, name='principal')
+    path('estadisticas/', views.estadisticas, name='estadisticas'),
 ]
 
 admin.site.site_header = 'SmartGym'
